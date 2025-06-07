@@ -6,15 +6,15 @@
 - [x] Implementation plan drafted (TDD approach)
 - [ ] GitHub issues created
 - [x] Development started
-- [x] All tests passing (48/48)
+- [x] All tests passing (67/67)
 - [ ] Ready for deployment
 
 ## Testing Metrics
-- Current Coverage: 88% statements/lines, 66% functions, 64% branches
+- Current Coverage: 93% statements/lines, 80% functions, 78% branches
 - Target Coverage: 80%+
-- Unit Tests: 48
+- Unit Tests: 67
 - Integration Tests: 8 (health endpoint tests)
-- Component Tests: 5 (App.vue tests)
+- Component Tests: 24 (App.vue + MessageBubble tests)
 - CSS/Theme Tests: 15 (Tailwind, styles, theme tests)
 - E2E Tests: 0
 
@@ -54,8 +54,13 @@
   - [x] Create main.css
   - [x] Set up visual tests
 
-## Phase 2: Core Components with TDD (Not Started)
-- [ ] Step 6: Create Message Component with TDD
+## Phase 2: Core Components with TDD (In Progress)
+- [x] Step 6: Create Message Component with TDD
+  - [x] Write component tests for MessageBubble
+  - [x] Create MessageBubble.vue component
+  - [x] Write and pass accessibility tests
+  - [x] Add ARIA labels and keyboard navigation
+  - [x] Write and pass style tests
 - [ ] Step 7: Build Input Component with TDD
 - [ ] Step 8: Create Message Store with Tests
 - [ ] Step 9: Build Claude Service with Mocks
@@ -85,4 +90,4 @@
 - Update metrics after each step
 
 ## Next Action
-Start with Step 6: Create Message Component with TDD
+Start with Step 7: Build Input Component with TDD
