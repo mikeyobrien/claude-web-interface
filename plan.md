@@ -1,486 +1,660 @@
-# Claude Web Interface Implementation Plan
+# Claude Web Interface TDD Implementation Plan
 
 ## Overview
-This plan breaks down the Claude Web Interface project into small, iterative steps that build upon each other. Each step is designed to be implementable in a single session while providing tangible progress.
+This plan breaks down the Claude Web Interface project into small, testable steps that build incrementally. Each step includes TDD prompts that ensure test-first development, proper integration, and no orphaned code.
 
-## Phase 1: Foundation (Steps 1-5)
-Setting up the basic project structure and tooling.
+## Project Blueprint
 
-### Step 1: Initialize Project Structure
-- Create package.json with basic dependencies
-- Set up directory structure
-- Create .gitignore
-- Create basic README.md
+### Phase 1: Foundation (Steps 1-5)
+Setting up the core infrastructure with testing frameworks in place from the start.
 
-### Step 2: Set Up Express Server
-- Create minimal Express server
-- Configure environment variables
-- Add basic health check endpoint
-- Test server runs on port 5080
+### Phase 2: Backend Core (Steps 6-10)
+Building the Express server with TDD, including health checks, error handling, and basic routing.
 
-### Step 3: Set Up Vite and Vue
-- Configure Vite for Vue development
-- Create basic Vue app structure
-- Set up development proxy to backend
-- Verify hot reload works
+### Phase 3: Frontend Setup (Steps 11-15)
+Establishing Vue.js with Vite, implementing basic components with component tests.
 
-### Step 4: Configure Tailwind CSS
-- Install and configure Tailwind
-- Create CSS variables for color palette
-- Set up light/dark mode detection
-- Create basic layout components
+### Phase 4: Claude Integration (Steps 16-20)
+Creating the Claude CLI service layer with comprehensive unit tests.
 
-### Step 5: Create Base Layout
-- Implement header component
-- Create message area container
-- Build input area component
-- Wire components together
+### Phase 5: API Implementation (Steps 21-25)
+Building RESTful endpoints with integration tests.
 
-## Phase 2: Core Functionality (Steps 6-10)
-Building the chat interface and basic Claude integration.
+### Phase 6: Frontend Features (Steps 26-30)
+Implementing the chat UI with component and integration tests.
 
-### Step 6: Create Message Components
-- Build message bubble component
-- Style user vs assistant messages
-- Add timestamp display
-- Implement auto-scroll behavior
+### Phase 7: Session Management (Steps 31-35)
+Adding persistence with thorough testing of state management.
 
-### Step 7: Implement Input Handling
-- Create auto-expanding textarea
-- Handle Enter/Shift+Enter behavior
-- Add send button functionality
-- Implement basic validation
+### Phase 8: Polish & Deploy (Steps 36-40)
+Final optimizations, e2e tests, and production readiness.
 
-### Step 8: Add Loading States
-- Create "Claude is thinking..." indicator
-- Add typing animation
-- Implement loading message placement
-- Handle loading state transitions
+## Detailed Implementation Steps
 
-### Step 9: Integrate Claude CLI
-- Create Claude service module
-- Implement spawn process logic
-- Parse JSON responses
-- Handle basic errors
-
-### Step 10: Connect Frontend to Backend
-- Implement /api/chat endpoint
-- Wire up message sending
-- Display responses in UI
-- Test end-to-end flow
-
-## Phase 3: Session Management (Steps 11-15)
-Adding persistence and session handling.
-
-### Step 11: Implement Session Storage
-- Create session management service
-- Store sessions in memory (for MVP)
-- Generate session IDs
-- Track message history
-
-### Step 12: Add Session Endpoints
-- Implement GET /api/sessions
-- Create GET /api/session/:id
-- Return proper session metadata
-- Handle missing sessions
-
-### Step 13: Frontend Session Integration
-- Store current session ID in localStorage
-- Load session on page refresh
-- Display message history
-- Update UI with session data
-
-### Step 14: Error Handling
-- Create error message component
-- Display errors as chat bubbles
-- Add retry functionality
-- Handle network failures
-
-### Step 15: Polish and Testing
-- Add proper TypeScript types
-- Write basic unit tests
-- Test on mobile device
-- Fix responsive issues
-
-## Implementation Prompts
-
-### Step 1: Initialize Project Structure
+### Step 1: Initialize Project with Testing Framework
 
 ```text
-Create a new Node.js project for a Claude web interface. Initialize the project with:
-1. A package.json file with name "claude-web-interface", version "1.0.0", and type "module"
-2. Basic dependencies: express, dotenv, cors
-3. Dev dependencies: nodemon, @types/node
-4. Scripts for "start", "dev", and "build"
-5. A comprehensive .gitignore for Node.js projects
-6. Create the following directory structure:
-   - server/ (for backend code)
-   - client/ (for frontend code)
-   - server/index.js with a comment placeholder
-   - A basic README.md explaining the project
+Create a new Node.js project with testing infrastructure from the start:
 
-Make sure to use ES modules syntax and include all necessary configurations.
+1. Initialize package.json with:
+   - name: "claude-web-interface"
+   - type: "module" for ES modules
+   - scripts for test, test:watch, test:coverage
+   
+2. Install testing dependencies:
+   - vitest for test runner
+   - @vitest/coverage-v8 for coverage
+   - happy-dom for DOM testing
+   
+3. Create vitest.config.js with:
+   - Coverage thresholds (80% minimum)
+   - Test environment setup
+   - Path aliases
+   
+4. Write first test in tests/setup.test.js:
+   - Test that verifies the test environment works
+   - Test that checks ES module imports
+   
+5. Create initial directory structure:
+   - server/
+   - client/
+   - tests/
+   - Add .gitignore for node_modules, coverage, etc.
+
+Run tests to ensure green state before proceeding.
 ```
 
-### Step 2: Set Up Express Server
+### Step 2: Create Express Server with TDD
 
 ```text
-Create a minimal Express server in server/index.js that:
-1. Uses ES module imports
-2. Loads environment variables from a .env file
-3. Sets up CORS for local development
-4. Binds to HOST (default 127.0.0.1) and PORT (default 5080) from environment
-5. Has a GET /api/health endpoint that returns { status: "ok", timestamp: new Date() }
-6. Includes proper error handling middleware
-7. Logs when the server starts with the full URL
+Build the Express server using TDD approach:
 
-Also create a .env.example file showing PORT=5080 and HOST=127.0.0.1
+1. Write failing test tests/server/app.test.js:
+   - Test that app exports an Express instance
+   - Test that app has JSON middleware
+   - Test that app has CORS configured
+   
+2. Create minimal server/app.js to make tests pass:
+   - Export Express app instance
+   - Add JSON middleware
+   - Configure CORS for localhost
+   
+3. Write test for environment configuration:
+   - Test that app reads PORT from env
+   - Test that app reads HOST from env
+   - Test defaults (PORT=5080, HOST=127.0.0.1)
+   
+4. Implement environment configuration:
+   - Create server/config.js with defaults
+   - Use dotenv for .env file support
+   - Export configuration object
+   
+5. Integration test for server startup:
+   - Test that server starts on configured port
+   - Test that server binds to configured host
+   - Clean shutdown in tests
 
-The server should be production-ready with proper error handling and security headers.
+All tests must pass before moving forward.
 ```
 
-### Step 3: Set Up Vite and Vue
+### Step 3: Add Health Check Endpoint with TDD
 
 ```text
-Add Vue 3 and Vite to the project:
-1. Install dependencies: vue@next, @vitejs/plugin-vue, vite
-2. Create vite.config.js with Vue plugin and proxy configuration to forward /api requests to localhost:5080
-3. Create client/index.html with a div#app and script module reference
-4. Create client/src/main.js that creates and mounts a Vue app
-5. Create client/src/App.vue with a simple "Hello Claude" message
-6. Update package.json scripts to include "dev:client" and "build:client" commands
-7. Ensure Vite dev server runs on port 5173
+Implement health check endpoint using test-first approach:
 
-The setup should support hot module replacement and proxy API requests correctly.
+1. Write failing API test tests/server/routes/health.test.js:
+   - Test GET /api/health returns 200
+   - Test response has status: "ok"
+   - Test response has timestamp
+   - Test timestamp is valid ISO date
+   
+2. Create server/routes/health.js to pass tests:
+   - Export Express router
+   - Implement GET /api/health endpoint
+   - Return required JSON structure
+   
+3. Write integration test for route mounting:
+   - Test that health route is accessible via app
+   - Test 404 for unknown routes
+   
+4. Wire up route in server/app.js:
+   - Import health router
+   - Mount at /api/health
+   - Add error handling middleware
+   
+5. Add error handling tests:
+   - Test that errors return JSON
+   - Test appropriate status codes
+   - Test error message format
+
+Verify all tests pass and coverage is maintained.
 ```
 
-### Step 4: Configure Tailwind CSS
+### Step 4: Set Up Frontend Build with Tests
 
 ```text
-Set up Tailwind CSS with a custom 70s-inspired color palette:
-1. Install tailwindcss, postcss, autoprefixer as dev dependencies
-2. Create tailwind.config.js with custom colors:
-   - Light mode: cream background (#FAF7F0), olive user messages (#8B956D), taupe Claude messages (#C9B8A8), sienna primary (#C65D00), coffee text (#3E2723)
-   - Dark mode: charcoal background (#2C2416), deep olive user (#4A5240), dark taupe Claude (#6B5D54), terra cotta primary (#D4754E), off-white text (#FFF8E7)
-3. Create client/src/style.css with Tailwind directives
-4. Configure CSS custom properties for theme switching
-5. Add system color scheme detection with @media (prefers-color-scheme)
-6. Import styles in main.js
+Configure Vite and Vue with testing infrastructure:
 
-Ensure the color system supports automatic light/dark mode switching based on system preferences.
+1. Write configuration test tests/client/vite.test.js:
+   - Test that vite.config.js exports valid config
+   - Test Vue plugin is configured
+   - Test proxy points to backend port
+   
+2. Install frontend dependencies and create config:
+   - Install vue, vite, @vitejs/plugin-vue
+   - Create vite.config.js with Vue plugin
+   - Configure proxy for /api routes
+   
+3. Write component test setup:
+   - Create tests/client/setup.js for Vue test utils
+   - Install @vue/test-utils
+   - Configure component test environment
+   
+4. Write first component test tests/client/App.test.js:
+   - Test App component renders
+   - Test has expected structure
+   - Test mount without errors
+   
+5. Create minimal App.vue to pass tests:
+   - Basic template with root div
+   - Export default component
+   - Add data-testid attributes
+
+Run both server and client tests together.
 ```
 
-### Step 5: Create Base Layout
+### Step 5: Implement CSS Architecture with Tests
 
 ```text
-Create the base layout components for the chat interface:
-1. Create client/src/components/AppHeader.vue:
-   - Fixed header with "Claude" title
-   - Minimal height (3rem)
-   - Uses primary color for accent
-2. Create client/src/components/MessageArea.vue:
-   - Scrollable container that fills available space
-   - Padding for safe area on mobile
-   - Placeholder text when no messages
-3. Create client/src/components/InputArea.vue:
-   - Fixed bottom position
-   - Contains textarea and send button
-   - Proper padding and spacing
-4. Update App.vue to use these components in a flex column layout
-5. Ensure the layout is responsive and works on mobile viewports
+Set up Tailwind CSS with design system tests:
 
-The layout should feel native on mobile with proper spacing and no overlapping elements.
+1. Write CSS configuration test:
+   - Test tailwind.config.js exports valid config
+   - Test custom color palette is defined
+   - Test dark mode configuration
+   
+2. Install and configure Tailwind:
+   - Install tailwind, postcss, autoprefixer
+   - Create tailwind.config.js with custom colors
+   - Define light/dark mode color schemes
+   
+3. Write CSS variable tests:
+   - Test CSS custom properties are generated
+   - Test light mode colors
+   - Test dark mode colors
+   - Test system preference detection
+   
+4. Create styles/main.css with:
+   - Tailwind directives
+   - CSS custom properties
+   - Media queries for color schemes
+   
+5. Write visual regression test setup:
+   - Install @vitest/browser for component screenshots
+   - Create base snapshot test
+   - Test theme switching
+
+Ensure all color values match specification.
 ```
 
-### Step 6: Create Message Components
+### Step 6: Create Message Component with TDD
 
 ```text
-Build the message components for the chat interface:
-1. Create client/src/components/MessageBubble.vue that accepts:
-   - role: "user" or "assistant"
-   - content: message text
-   - timestamp: Date object
-   - isError: boolean (optional)
-2. Style messages with:
-   - Rounded corners with tail on appropriate side
-   - User messages: right-aligned, olive/deep olive color
-   - Assistant messages: left-aligned, taupe color
-   - Error messages: red-tinted version of assistant style
-   - Timestamp shown below in smaller, muted text
-3. Create client/src/composables/useMessages.js:
-   - Reactive messages array
+Build the message bubble component using TDD:
+
+1. Write component tests tests/client/components/MessageBubble.test.js:
+   - Test renders with user role
+   - Test renders with assistant role
+   - Test displays content correctly
+   - Test timestamp formatting
+   - Test error state styling
+   
+2. Create MessageBubble.vue to pass tests:
+   - Accept props: role, content, timestamp, isError
+   - Conditional styling based on role
+   - Format timestamp display
+   - Error state handling
+   
+3. Write accessibility tests:
+   - Test ARIA labels
+   - Test semantic HTML
+   - Test keyboard navigation
+   - Test screen reader content
+   
+4. Add accessibility features:
+   - Proper ARIA roles
+   - Semantic time element
+   - Focus management
+   
+5. Write style tests:
+   - Test user message alignment (right)
+   - Test assistant message alignment (left)
+   - Test color classes applied
+   - Test responsive behavior
+
+Component must be fully tested before integration.
+```
+
+### Step 7: Build Input Component with TDD
+
+```text
+Create the message input component with comprehensive tests:
+
+1. Write input component tests tests/client/components/MessageInput.test.js:
+   - Test textarea renders
+   - Test placeholder text
+   - Test v-model binding
+   - Test enter key sends message
+   - Test shift+enter adds newline
+   
+2. Implement MessageInput.vue:
+   - Textarea with v-model
+   - Key event handlers
+   - Emit send event
+   - Clear after send
+   
+3. Write auto-expand tests:
+   - Test initial height (2 lines)
+   - Test expands with content
+   - Test maximum height (5 lines)
+   - Test height calculation
+   
+4. Add auto-expand functionality:
+   - Calculate height from scrollHeight
+   - Set min/max constraints
+   - Smooth transitions
+   
+5. Write validation tests:
+   - Test empty message prevention
+   - Test whitespace trimming
+   - Test maximum length
+   - Test disabled during send
+
+Full test coverage required for all interactions.
+```
+
+### Step 8: Create Message Store with Tests
+
+```text
+Implement message state management with TDD:
+
+1. Write store tests tests/client/stores/messages.test.js:
+   - Test initial state is empty array
+   - Test addMessage adds to array
+   - Test message structure
+   - Test message ordering
+   
+2. Create stores/messages.js:
+   - Export useMessages composable
+   - Reactive messages ref
    - addMessage function
-   - Auto-scroll to bottom function
-4. Update MessageArea to render MessageBubbles
-5. Add smooth scroll behavior and proper spacing
-
-Messages should be clearly distinguished and easy to read on mobile.
-```
-
-### Step 7: Implement Input Handling
-
-```text
-Create the input handling functionality:
-1. Update client/src/components/InputArea.vue:
-   - Multi-line textarea that expands (min 2 lines, max 5 lines)
-   - Calculate height based on scrollHeight
-   - Send button with proper disabled state
-2. Implement keyboard handling:
-   - Enter key sends message (preventDefault)
-   - Shift+Enter adds new line
-   - Trim whitespace before sending
-3. Add client/src/composables/useInput.js:
-   - Reactive message text
-   - Sending state
-   - Handle send action
-   - Clear input after sending
-4. Emit events to parent for message sending
-5. Focus management after sending
-
-The input should feel responsive and natural on mobile keyboards.
-```
-
-### Step 8: Add Loading States
-
-```text
-Implement loading indicators for better UX:
-1. Create client/src/components/LoadingIndicator.vue:
-   - Shows "Claude is thinking..." text
-   - Subtle pulsing animation
-   - Renders as a temporary message bubble
-2. Update useMessages composable:
-   - Add loading message when sending
-   - Remove loading message when response received
-   - Handle loading message positioning
-3. Add loading state to InputArea:
-   - Disable input while loading
-   - Change send button to loading state
-   - Maintain focus for better UX
-4. Add transition animations:
-   - Fade in/out for loading message
-   - Smooth height transitions
-5. Test loading states with setTimeout mock
-
-Loading states should provide clear feedback without being intrusive.
-```
-
-### Step 9: Integrate Claude CLI
-
-```text
-Create the backend service for Claude CLI integration:
-1. Create server/services/claude.js with:
-   - ES module exports
-   - Function to spawn Claude CLI process
-   - Pass message and sessionId as arguments
-   - Use --output-format json flag
-   - Parse JSON response
-2. Handle process spawning:
-   - Proper error handling for spawn failures
-   - Timeout handling (30 seconds)
-   - Parse stdout for JSON response
-   - Capture stderr for errors
-3. Create response parser:
-   - Extract response text
-   - Extract session ID
-   - Extract metadata (cost, duration)
-   - Handle malformed responses
-4. Add input sanitization:
-   - Escape special characters
-   - Validate message length
-   - Prevent command injection
-5. Export clean interface for route handlers
-
-The service should be robust and handle all error cases gracefully.
-```
-
-### Step 10: Connect Frontend to Backend
-
-```text
-Wire up the complete chat flow:
-1. Create server/routes/chat.js:
-   - POST /api/chat endpoint
-   - Validate request body
-   - Call Claude service
-   - Return formatted response
-   - Handle errors with proper status codes
-2. Update server/index.js:
-   - Import and use chat routes
-   - Add JSON body parser middleware
-   - Add request logging
-3. Create client/src/services/api.js:
-   - Fetch wrapper with proper headers
-   - POST to /api/chat
-   - Handle response parsing
-   - Throw meaningful errors
-4. Update App.vue:
-   - Wire up message sending to API
-   - Handle responses and add to messages
-   - Show errors as error bubbles
-   - Update loading states
-5. Test the complete flow end-to-end
-
-The integration should feel seamless with proper error handling throughout.
-```
-
-### Step 11: Implement Session Storage
-
-```text
-Add session management to the backend:
-1. Create server/services/sessions.js:
-   - In-memory Map for session storage
-   - Session object structure: { id, messages, lastActive, createdAt }
-   - Methods: create, get, update, list, addMessage
-2. Generate session IDs:
-   - Use crypto.randomUUID()
-   - Ensure uniqueness
-   - Return session metadata
-3. Update claude.js service:
-   - Accept sessionId parameter
-   - Pass --resume flag when sessionId exists
-   - Return sessionId with response
-4. Message history tracking:
-   - Store both user and assistant messages
-   - Include timestamps
-   - Limit history to last 100 messages
-5. Add session cleanup:
-   - Remove sessions older than 24 hours
-   - Run cleanup every hour
-
-Sessions should persist across server restarts for better development experience.
-```
-
-### Step 12: Add Session Endpoints
-
-```text
-Create the session API endpoints:
-1. Create server/routes/sessions.js:
-   - GET /api/sessions - returns list with metadata
-   - GET /api/session/:id - returns full message history
-   - Proper error handling for missing sessions
-2. Session list response:
-   - Include id, messageCount, lastActive
-   - Sort by lastActive descending
-   - Limit to 50 most recent
-3. Session detail response:
-   - Full message history
-   - Format timestamps consistently
-   - Include session metadata
-4. Update server/index.js:
-   - Import and mount session routes
-   - Add route ordering
-5. Add integration with chat endpoint:
-   - Create session if not provided
-   - Update session with each message
-   - Return sessionId in response
-
-The API should be RESTful and follow consistent patterns.
-```
-
-### Step 13: Frontend Session Integration
-
-```text
-Integrate session management in the frontend:
-1. Create client/src/composables/useSession.js:
-   - Current sessionId in localStorage
-   - Load session on mount
-   - Save sessionId after each message
-   - Clear session function
-2. Update API service:
-   - Include sessionId in chat requests
-   - Add methods for session endpoints
-   - Handle session-related errors
-3. Modify App.vue:
-   - Load message history on mount
-   - Restore scroll position
-   - Update sessionId from responses
-4. Add session persistence:
-   - Check localStorage on load
-   - Fetch history if session exists
-   - Handle invalid/expired sessions
-5. Add "New Chat" functionality:
-   - Clear current session
-   - Reset message history
-   - Remove from localStorage
-
-The app should seamlessly continue conversations after refresh.
-```
-
-### Step 14: Error Handling
-
-```text
-Implement comprehensive error handling:
-1. Create client/src/components/ErrorMessage.vue:
-   - Extends MessageBubble with error styling
-   - Shows error text and retry button
-   - Emits retry event
-2. Define error types:
-   - Network errors: "Failed to connect"
-   - API errors: Show actual error message
-   - Timeout errors: "Request timed out"
-   - Session errors: "Session not found"
-3. Update composables for error handling:
-   - Add error state tracking
-   - Implement retry logic
-   - Exponential backoff for retries
-4. Backend error improvements:
-   - Consistent error format
-   - Meaningful error messages
-   - Proper HTTP status codes
-   - Log errors for debugging
-5. User-friendly error messages:
-   - Avoid technical jargon
-   - Provide actionable next steps
-   - Include retry options
-
-Errors should be helpful and not break the user experience.
-```
-
-### Step 15: Polish and Testing
-
-```text
-Final polish and testing setup:
-1. Add TypeScript declarations:
-   - Create type definitions for API responses
-   - Add JSDoc comments for better IDE support
-   - Define component prop types
-2. Create basic test suite:
-   - Set up Vitest for unit tests
-   - Test message components
-   - Test API service functions
+   - Message factory with defaults
+   
+3. Write computed property tests:
+   - Test hasMessages computed
+   - Test messageCount computed
+   - Test lastMessage computed
+   
+4. Add computed properties:
+   - Implement computed getters
+   - Add TypeScript-like JSDoc types
+   
+5. Write action tests:
+   - Test clearMessages
+   - Test updateMessage
+   - Test deleteMessage
    - Test error handling
-3. Mobile optimizations:
-   - Add viewport meta tag
-   - Test on real Android device
-   - Fix any input focus issues
-   - Ensure proper keyboard behavior
-4. Performance improvements:
-   - Implement message virtualization for long chats
-   - Add debouncing to input
-   - Optimize bundle size
-   - Add loading="lazy" where appropriate
-5. Documentation:
-   - Update README with setup instructions
-   - Add inline code comments
-   - Document API endpoints
-   - Create troubleshooting guide
 
-The app should feel polished and production-ready.
+Store must be reactive and fully tested.
 ```
 
-## GitHub Issues
+### Step 9: Build Claude Service with Mocks
 
-Each step above should be created as a GitHub issue with:
-- Clear acceptance criteria
-- Technical implementation notes
-- Dependencies on previous steps
-- Estimated complexity (Small/Medium/Large)
+```text
+Create Claude CLI integration service with TDD:
+
+1. Write service tests tests/server/services/claude.test.js:
+   - Test sendMessage function exists
+   - Test spawns claude process
+   - Test passes correct arguments
+   - Test handles JSON response
+   - Mock child_process for testing
+   
+2. Create services/claude.js:
+   - Import child_process spawn
+   - sendMessage async function
+   - Build command arguments
+   - Parse JSON output
+   
+3. Write error handling tests:
+   - Test timeout handling
+   - Test invalid JSON response
+   - Test process spawn errors
+   - Test stderr capture
+   
+4. Implement error handling:
+   - Add timeout mechanism
+   - Try/catch JSON parsing
+   - Collect stderr output
+   - Throw meaningful errors
+   
+5. Write response parsing tests:
+   - Test extracts response text
+   - Test extracts session ID
+   - Test extracts metadata
+   - Test handles missing fields
+
+Use dependency injection for testability.
+```
+
+### Step 10: Create Chat API Endpoint with Tests
+
+```text
+Build the chat endpoint with integration tests:
+
+1. Write endpoint tests tests/server/routes/chat.test.js:
+   - Test POST /api/chat exists
+   - Test requires message in body
+   - Test validates message type
+   - Test calls Claude service
+   - Test returns expected format
+   
+2. Create routes/chat.js:
+   - POST handler
+   - Request validation
+   - Call Claude service
+   - Format response
+   
+3. Write error response tests:
+   - Test 400 for missing message
+   - Test 400 for invalid types
+   - Test 500 for service errors
+   - Test error message format
+   
+4. Implement error handling:
+   - Validation middleware
+   - Try/catch service calls
+   - Consistent error format
+   - Appropriate status codes
+   
+5. Write integration tests:
+   - Test full request/response cycle
+   - Test with mocked Claude service
+   - Test concurrent requests
+   - Test request logging
+
+Full API contract must be tested.
+```
+
+### Step 11: Wire Frontend to Backend with Tests
+
+```text
+Connect the UI to the API with integration tests:
+
+1. Write API client tests tests/client/services/api.test.js:
+   - Test sendMessage function
+   - Test builds correct request
+   - Test handles success response
+   - Test handles error response
+   - Mock fetch for testing
+   
+2. Create services/api.js:
+   - Export sendMessage function
+   - Fetch with proper headers
+   - Parse JSON response
+   - Throw on errors
+   
+3. Write app integration tests:
+   - Test message send flow
+   - Test adds user message
+   - Test shows loading state
+   - Test adds response message
+   - Test clears loading state
+   
+4. Wire up in App.vue:
+   - Import API service
+   - Handle input events
+   - Manage loading state
+   - Update message store
+   
+5. Write e2e test setup:
+   - Configure test server
+   - Test happy path flow
+   - Test error scenarios
+   - Test loading states
+
+Integration must work end-to-end.
+```
+
+### Step 12: Add Session Management with Tests
+
+```text
+Implement session handling with comprehensive tests:
+
+1. Write session service tests tests/server/services/sessions.test.js:
+   - Test createSession function
+   - Test getSession function
+   - Test updateSession function
+   - Test session data structure
+   - Test in-memory storage
+   
+2. Create services/sessions.js:
+   - Session Map storage
+   - CRUD operations
+   - Session factory
+   - Timestamp tracking
+   
+3. Write session API tests:
+   - Test GET /api/sessions
+   - Test GET /api/session/:id
+   - Test 404 for missing session
+   - Test session list format
+   
+4. Implement session endpoints:
+   - List sessions route
+   - Get session route
+   - Error handling
+   - Response formatting
+   
+5. Write frontend session tests:
+   - Test session persistence
+   - Test localStorage usage
+   - Test session loading
+   - Test new session creation
+
+Sessions must persist across refreshes.
+```
+
+### Step 13: Implement Loading States with Tests
+
+```text
+Add comprehensive loading indicators with tests:
+
+1. Write loading component tests:
+   - Test LoadingIndicator renders
+   - Test shows correct text
+   - Test animation classes
+   - Test accessibility
+   
+2. Create LoadingIndicator.vue:
+   - "Claude is thinking..." text
+   - Pulsing animation
+   - ARIA live region
+   - Proper styling
+   
+3. Write loading state tests:
+   - Test shows during API call
+   - Test hides on success
+   - Test hides on error
+   - Test prevents duplicate sends
+   
+4. Implement loading logic:
+   - Add isLoading ref
+   - Set true on send
+   - Set false on complete
+   - Disable input while loading
+   
+5. Write UX tests:
+   - Test focus management
+   - Test scroll behavior
+   - Test animation smoothness
+   - Test mobile experience
+
+Loading states must be smooth and accessible.
+```
+
+### Step 14: Add Error Handling UI with Tests
+
+```text
+Build error handling UI components with TDD:
+
+1. Write error display tests:
+   - Test error messages render
+   - Test retry button exists
+   - Test error styling
+   - Test dismissal
+   
+2. Create ErrorMessage.vue:
+   - Extend MessageBubble
+   - Add retry button
+   - Error-specific styling
+   - Emit retry event
+   
+3. Write retry logic tests:
+   - Test retry attempts
+   - Test exponential backoff
+   - Test max retries
+   - Test success after retry
+   
+4. Implement retry mechanism:
+   - Track attempt count
+   - Calculate delays
+   - Retry API calls
+   - Update UI state
+   
+5. Write error recovery tests:
+   - Test connection errors
+   - Test timeout handling
+   - Test invalid responses
+   - Test user feedback
+
+Error handling must be user-friendly.
+```
+
+### Step 15: Optimize Performance with Tests
+
+```text
+Add performance optimizations with measurable tests:
+
+1. Write performance tests:
+   - Test initial load time
+   - Test message rendering speed
+   - Test scroll performance
+   - Test memory usage
+   
+2. Implement optimizations:
+   - Virtual scrolling for messages
+   - Debounced input handling
+   - Lazy component loading
+   - Bundle optimization
+   
+3. Write bundle size tests:
+   - Test JS bundle size
+   - Test CSS bundle size
+   - Test chunk splitting
+   - Test tree shaking
+   
+4. Configure build optimization:
+   - Vite build config
+   - Terser options
+   - CSS purging
+   - Compression
+   
+5. Write mobile performance tests:
+   - Test on slow network
+   - Test touch responsiveness
+   - Test memory constraints
+   - Test battery usage
+
+Performance must meet mobile requirements.
+```
+
+### Step 16: Complete E2E Testing Suite
+
+```text
+Build comprehensive end-to-end tests:
+
+1. Write user journey tests:
+   - Test new user flow
+   - Test returning user flow
+   - Test error recovery
+   - Test session management
+   
+2. Set up e2e framework:
+   - Install playwright
+   - Configure test environment
+   - Create page objects
+   - Set up CI integration
+   
+3. Write mobile-specific tests:
+   - Test touch interactions
+   - Test keyboard behavior
+   - Test viewport sizes
+   - Test orientation changes
+   
+4. Implement visual tests:
+   - Screenshot comparisons
+   - Theme switching
+   - Responsive layouts
+   - Animation testing
+   
+5. Write performance e2e tests:
+   - Measure real load times
+   - Test under load
+   - Memory leak detection
+   - Network resilience
+
+Full coverage of user workflows required.
+```
+
+## Testing Strategy Summary
+
+### Unit Tests
+- All functions have unit tests
+- Mock external dependencies
+- Test edge cases and errors
+- Maintain 80%+ coverage
+
+### Integration Tests
+- Test component interactions
+- Test API endpoints
+- Test service integrations
+- Mock at boundaries only
+
+### E2E Tests
+- Test critical user paths
+- Test on real devices
+- Test error scenarios
+- Performance testing
 
 ## Success Criteria
 
-After completing all steps, the application should:
-1. Load quickly on mobile devices
-2. Handle conversations smoothly
-3. Persist sessions between refreshes
-4. Show clear error messages
-5. Feel native on Android browsers
-6. Be easy to extend with new features
+Each step must:
+1. Have tests written first (TDD)
+2. Pass all tests before proceeding
+3. Integrate with previous code
+4. Maintain test coverage above 80%
+5. Have no orphaned code
+6. Be deployable and runnable
+
+## Implementation Order
+
+Follow the steps sequentially. Each builds on the previous:
+1. Foundation with testing → 
+2. Backend core with API → 
+3. Frontend components → 
+4. Service integration → 
+5. State management → 
+6. Polish and optimization
+
+This ensures a working application at each stage with comprehensive test coverage throughout.

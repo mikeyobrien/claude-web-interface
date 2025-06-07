@@ -3,36 +3,84 @@
 ## Current Status
 - [x] Project specification created
 - [x] GitHub repository created
-- [x] Implementation plan drafted
+- [x] Implementation plan drafted (TDD approach)
 - [ ] GitHub issues created
 - [ ] Development started
+- [ ] All tests passing
+- [ ] Ready for deployment
 
-## Phase 1: Foundation (Not Started)
-- [ ] Step 1: Initialize Project Structure
-- [ ] Step 2: Set Up Express Server
-- [ ] Step 3: Set Up Vite and Vue
-- [ ] Step 4: Configure Tailwind CSS
-- [ ] Step 5: Create Base Layout
+## Testing Metrics
+- Current Coverage: 0%
+- Target Coverage: 80%+
+- Unit Tests: 0
+- Integration Tests: 0
+- E2E Tests: 0
 
-## Phase 2: Core Functionality (Not Started)
-- [ ] Step 6: Create Message Components
-- [ ] Step 7: Implement Input Handling
-- [ ] Step 8: Add Loading States
-- [ ] Step 9: Integrate Claude CLI
-- [ ] Step 10: Connect Frontend to Backend
+## Phase 1: Foundation with Testing (Not Started)
+- [ ] Step 1: Initialize Project with Testing Framework
+  - [ ] Create package.json with test scripts
+  - [ ] Install vitest and testing dependencies
+  - [ ] Create vitest.config.js
+  - [ ] Write and pass initial test
+  - [ ] Set up directory structure
+  
+- [ ] Step 2: Create Express Server with TDD
+  - [ ] Write app.test.js
+  - [ ] Create server/app.js
+  - [ ] Write config tests
+  - [ ] Implement environment config
+  - [ ] Pass all server tests
+  
+- [ ] Step 3: Add Health Check Endpoint with TDD
+  - [ ] Write health endpoint tests
+  - [ ] Create health route
+  - [ ] Write integration tests
+  - [ ] Wire up routes
+  - [ ] Add error handling
+  
+- [ ] Step 4: Set Up Frontend Build with Tests
+  - [ ] Write vite config tests
+  - [ ] Install Vue and Vite
+  - [ ] Create vite.config.js
+  - [ ] Write App component test
+  - [ ] Create minimal App.vue
+  
+- [ ] Step 5: Implement CSS Architecture with Tests
+  - [ ] Write Tailwind config tests
+  - [ ] Install and configure Tailwind
+  - [ ] Write CSS variable tests
+  - [ ] Create main.css
+  - [ ] Set up visual tests
 
-## Phase 3: Session Management (Not Started)
-- [ ] Step 11: Implement Session Storage
-- [ ] Step 12: Add Session Endpoints
-- [ ] Step 13: Frontend Session Integration
-- [ ] Step 14: Error Handling
-- [ ] Step 15: Polish and Testing
+## Phase 2: Core Components with TDD (Not Started)
+- [ ] Step 6: Create Message Component with TDD
+- [ ] Step 7: Build Input Component with TDD
+- [ ] Step 8: Create Message Store with Tests
+- [ ] Step 9: Build Claude Service with Mocks
+- [ ] Step 10: Create Chat API Endpoint with Tests
+
+## Phase 3: Integration with Tests (Not Started)
+- [ ] Step 11: Wire Frontend to Backend with Tests
+- [ ] Step 12: Add Session Management with Tests
+- [ ] Step 13: Implement Loading States with Tests
+- [ ] Step 14: Add Error Handling UI with Tests
+- [ ] Step 15: Optimize Performance with Tests
+
+## Phase 4: E2E Testing (Not Started)
+- [ ] Step 16: Complete E2E Testing Suite
+
+## TDD Principles
+- Write tests FIRST before implementation
+- Each step must integrate with previous work
+- No orphaned code allowed
+- Maintain test coverage above 80%
+- All tests must pass before moving to next step
 
 ## Notes
-- Each step builds on the previous one
+- Follow TDD strictly - RED, GREEN, REFACTOR cycle
 - Test on real Android device after each phase
-- Keep commits atomic and well-documented
-- Update this file as tasks are completed
+- Keep commits atomic with descriptive messages
+- Update metrics after each step
 
 ## Next Action
-Create GitHub issues for each implementation step
+Start with Step 1: Initialize Project with Testing Framework
