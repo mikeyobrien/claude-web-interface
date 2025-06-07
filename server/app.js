@@ -33,6 +33,10 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// Import and mount routes
+import healthRouter from './routes/health.js'
+app.use('/api', healthRouter)
+
 // Function to add error handling middleware (must be called after routes are added)
 export function addErrorHandling() {
   app.use((err, req, res, next) => {

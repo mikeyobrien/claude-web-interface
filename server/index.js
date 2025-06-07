@@ -1,8 +1,11 @@
 // ABOUTME: Main server entry point that starts the Express application
 // ABOUTME: Handles server startup with proper logging and error handling
 
-import { app } from './app.js'
+import { app, addErrorHandling } from './app.js'
 import { config } from './config.js'
+
+// Add error handling after all routes are mounted
+addErrorHandling()
 
 // Start the server
 const server = app.listen(config.port, config.host, () => {

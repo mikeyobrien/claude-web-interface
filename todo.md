@@ -10,9 +10,9 @@
 - [ ] Ready for deployment
 
 ## Testing Metrics
-- Current Coverage: 100% (only setup tests so far)
+- Current Coverage: 100% (statements/lines/functions), 66% branches
 - Target Coverage: 80%+
-- Unit Tests: 4
+- Unit Tests: 15
 - Integration Tests: 0
 - E2E Tests: 0
 
@@ -24,12 +24,12 @@
   - [x] Write and pass initial test
   - [x] Set up directory structure
   
-- [ ] Step 2: Create Express Server with TDD
-  - [ ] Write app.test.js
-  - [ ] Create server/app.js
-  - [ ] Write config tests
-  - [ ] Implement environment config
-  - [ ] Pass all server tests
+- [x] Step 2: Create Express Server with TDD
+  - [x] Write app.test.js
+  - [x] Create server/app.js
+  - [x] Write config tests
+  - [x] Implement environment config
+  - [x] Pass all server tests
   
 - [ ] Step 3: Add Health Check Endpoint with TDD
   - [ ] Write health endpoint tests
