@@ -1,0 +1,96 @@
+/* ABOUTME: Main CSS file with Tailwind directives and custom properties */
+/* ABOUTME: Defines color variables for light/dark mode theme switching */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Default light mode colors */
+  :root {
+    --color-background: #FAF7F0; /* cream */
+    --color-text: #3E2723; /* coffee */
+    --color-primary: #C65D00; /* sienna */
+    --color-user-message: #8B956D; /* olive */
+    --color-assistant-message: #C9B8A8; /* taupe */
+    --color-border: rgba(62, 39, 35, 0.1);
+    --color-shadow: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Dark mode colors - automatic based on system preference */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-background: #2C2416; /* charcoal */
+      --color-text: #FFF8E7; /* off-white */
+      --color-primary: #D4754E; /* terra-cotta */
+      --color-user-message: #4A5240; /* deep-olive */
+      --color-assistant-message: #6B5D54; /* dark-taupe */
+      --color-border: rgba(255, 248, 231, 0.1);
+      --color-shadow: rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  /* Dark mode colors - manual class override */
+  .dark {
+    --color-background: #2C2416; /* charcoal */
+    --color-text: #FFF8E7; /* off-white */
+    --color-primary: #D4754E; /* terra-cotta */
+    --color-user-message: #4A5240; /* deep-olive */
+    --color-assistant-message: #6B5D54; /* dark-taupe */
+    --color-border: rgba(255, 248, 231, 0.1);
+    --color-shadow: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Base styles */
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-[var(--color-background)] text-[var(--color-text)] transition-colors duration-200;
+  }
+}
+
+@layer components {
+  /* Reusable component styles */
+  .btn-primary {
+    @apply bg-[var(--color-primary)] text-white px-4 py-2 rounded-lg transition-opacity hover:opacity-90 active:opacity-80;
+  }
+
+  .message-bubble {
+    @apply rounded-2xl px-4 py-3 max-w-[80%] shadow-sm;
+  }
+
+  .message-user {
+    @apply bg-[var(--color-user-message)] text-white ml-auto;
+  }
+
+  .message-assistant {
+    @apply bg-[var(--color-assistant-message)] text-[var(--color-text)];
+  }
+
+  .input-area {
+    @apply bg-[var(--color-background)] border-t border-[var(--color-border)] p-4;
+  }
+}
+
+@layer utilities {
+  /* Custom utilities */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 3px;
+  }
+}
