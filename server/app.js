@@ -35,7 +35,9 @@ app.use(express.urlencoded({ extended: true }))
 
 // Import and mount routes
 import healthRouter from './routes/health.js'
+import chatRouter from './routes/chat.js'
 app.use('/api', healthRouter)
+app.use('/api', chatRouter)
 
 // Function to add error handling middleware (must be called after routes are added)
 export function addErrorHandling() {
